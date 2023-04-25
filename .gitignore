@@ -1,0 +1,9 @@
+ors
+.ipynb_checkpoints
+.idea
+.pytest_cache
+.env
+__pycache__
+data
+.vscode
+export
