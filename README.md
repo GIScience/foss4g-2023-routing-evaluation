@@ -48,7 +48,7 @@ The script `./src/scripts/generate_ors_routes.py` replicates the route from Goog
 
 #### 2.1 Start ORS docker containers
 
-The ORS instances can be run using docker-compose files. They can be found in the folder `./openrouteservice` on [Zenodo](https://zenodo.org/record/7857038#.ZEghcXbP0qw). By default it will be run for Berlin with modelled median traffic speed.  
+The ORS instances can be run using docker-compose files. They can be found in the folder `./openrouteservice` on [Zenodo](https://zenodo.org/record/7857038#.ZEghcXbP0qw). By default it will be run for Berlin with modelled median traffic speed.
 
 If you want to run the scripts for a different city or with another traffic data sets, you need to change the data and config file accordingly. (see [Run for different cities with different traffic data](#run-for-different-cities-with-different-traffic-data).
 ) below for more information.
@@ -72,7 +72,7 @@ Check if the openrouteservice instance is ready by opening `http://localhost:808
 | modelled_p85 | http://localhost:8083/ors/health | ORS with modelled 85th percentile traffic speed |
 | uber_p85     | http://localhost:8084/ors/health | ORS with uber 85th percentile traffic speed |
 
-#### B. Run the script
+#### 2.2 Run the script
 
 Run the script to generate ORS routes while the relevant ORS container is running, e.g. `poetry run python ./src/scripts/generate_ors_routes.py -c berlin -t normal`
 
@@ -85,7 +85,7 @@ poetry run python ./src/scripts/generate_ors_routes.py -c berlin -t modelled_p85
 poetry run python ./src/scripts/generate_ors_routes.py -c berlin -t uber_p85
 ```
 
-#### C. Run for different cities with different traffic data
+#### 2.3 Run for different cities with different traffic data
 
 1. Copy your pbf file to `./ors/ORS TYPE/openrouteservice/docker/data/`.
 2. Adapt path of pbf file in docker-compose.yml
@@ -97,7 +97,7 @@ poetry run python ./src/scripts/generate_ors_routes.py -c berlin -t uber_p85
 3. Copy traffic speed data csv file to: `./ors/ORS TYPE/openrouteservice/openrouteservice/src/main/files/uber_traffic/`.
 
     **Important:** Rename the file to `modelled_traffic_speed.csv`
-    
+
 4. If it exists, delete the `graphs` folder in `./ors/ORS TYPE/openrouteservice/docker/`.
 5. If you want to run it again with different traffic data/pbf files, rebuild the image when composing with `docker compose up -d --build`
 6. Follow steps 1 "Start ORS docker containers" and 2 "Run the script"
@@ -106,7 +106,7 @@ poetry run python ./src/scripts/generate_ors_routes.py -c berlin -t uber_p85
 
 The script `./src/scripts/route_analysis.py` calculates statistics to compare the ORS routes to the according Google routes.
 
-After generating all routes in the steps above, run the analysis, e.g. 
+After generating all routes in the steps above, run the analysis, e.g.
 ```
 $ poetry run python ./src/scripts/route_analysis.py -c berlin
 ```
