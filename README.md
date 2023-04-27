@@ -50,8 +50,7 @@ The script `./src/scripts/generate_ors_routes.py` replicates the route from Goog
 
 The ORS instances can be run using docker-compose files. They can be found in the folder `./openrouteservice` on [Zenodo](https://zenodo.org/record/7857038#.ZEghcXbP0qw). By default it will be run for Berlin with modelled median traffic speed.
 
-If you want to run the scripts for a different city or with another traffic data sets, you need to change the data and config file accordingly. (see [Run for different cities with different traffic data](#run-for-different-cities-with-different-traffic-data).
-) below for more information.
+If you want to run the scripts for a different city or with another traffic data sets, you need to change the data and config file accordingly (see [Run for different cities with different traffic data](#23-run-for-different-cities-with-different-traffic-data)) below for more information.
 
 Start a container by executing:
 
@@ -98,9 +97,8 @@ poetry run python ./src/scripts/generate_ors_routes.py -c berlin -t uber_p85
 
     **Important:** Rename the file to `modelled_traffic_speed.csv`
 
-4. If it exists, delete the `graphs` folder in `./ors/ORS TYPE/openrouteservice/docker/`.
-5. If you want to run it again with different traffic data/pbf files, rebuild the image when composing with `docker compose up -d --build`
-6. Follow steps 1 "Start ORS docker containers" and 2 "Run the script"
+4. If you want to run it again with different traffic data/pbf files, rebuild the image when composing with `docker compose up -d --build`
+5. Follow steps [2.1 Start ORS docker containers](#21-start-ors-docker-containers) and [2.2 Run the script](#22-run-the-script)
 
 ### 3. Analyze routes
 
