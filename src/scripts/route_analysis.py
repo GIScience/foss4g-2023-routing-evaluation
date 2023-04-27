@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Compare and evaluate Google vs ORS routes"""
+
 import argparse
 import os
 import sys
@@ -48,8 +49,9 @@ def extract_info(data_dir, out_dir, city):
 
     routes_list_full = []
     routes_id_list = [None]  # create a value to compare to
+    alternative_id = 0
 
-    for index, google_route in all_google_routes.iterrows():
+    for _index, google_route in all_google_routes.iterrows():
         logger.info(f"Processing route number {google_route.id}")
         # Google Route
         if google_route.id in routes_id_list:

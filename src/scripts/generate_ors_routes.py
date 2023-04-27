@@ -13,7 +13,7 @@ import argparse
 # change to the working directory to the python file location so that the imports work
 sys.path.append(str(Path(__file__).parent.parent.resolve()))
 
-from route_analyst import ORSRoutingClient
+from route_analyst.clients import ORSRoutingClient
 
 
 ORS_INSTANCES = {
@@ -27,7 +27,7 @@ PROFILE = "driving-car"
 FORMAT = "geojson"
 
 logger = logging.getLogger(__file__)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 
 def split_line(splits, google_geom):
@@ -78,10 +78,10 @@ def main(data_dir, ors_type, city, splits):
     # Client to query ORS
     ors_client = ORSRoutingClient(base_url=ors_url)
 
-    routes_id_list = [0]
+    routes_id_list = [None]
     alternative_id = 0
 
-    for index, google_route in all_google_routes.iterrows():
+    for _index, google_route in all_google_routes.iterrows():
         logger.info(f"Processing route number {google_route.id} - {alternative_id}")
 
         if google_route.id in routes_id_list:

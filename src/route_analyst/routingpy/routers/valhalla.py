@@ -14,9 +14,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 #
-"""
-Core client functionality, common across all API requests.
-"""
+"""Core client functionality, common across all API requests"""
 
 from typing import List, Union, Sequence, Optional  # noqa: F401
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Simulates routes using openrouteservice"""
+"""Route classes"""
 
 import geopandas as gpd
 from shapely.geometry import LineString, MultiLineString
@@ -16,20 +16,12 @@ class ORSRoute(object):
     __dataframe = None
 
     def __init__(self, json_response):
-        """
-        Initializes parameters and sends request to ORS server
-
-        :param params: dict
-        :param base_url: string
-        """
+        """Initializes parameters and sends request to ORS server"""
         self.__json_response = json_response
 
     @property
     def json_response(self):
-        """
-        Returns the ORS response as a dictionary
-        :return: dict
-        """
+        """Returns the ORS response as a dictionary"""
         return self.__json_response
 
     @property
@@ -44,7 +36,7 @@ class ORSRoute(object):
     def geometry(self):
         """
         Returns the geometry of the route
-        :return:
+        :return: LineString object
         """
         return LineString(self.coordinates)
 
@@ -108,42 +100,30 @@ class ORSRoute(object):
 
     @property
     def noise_exposure(self):
-        """
-        Returns the overall exposure to noise of the route
-        :return: noise exposure
-        """
+        """Returns the overall exposure to noise of the route"""
         summary = self.summary_criterion("noise")
         return sum(summary["value"] * summary["distance"]) / summary["distance"].sum()
 
     @property
     def duration(self):
-        """
-        Returns the overall duration of the route
-        :return: Duration
-        """
+        """Returns the overall duration of the route"""
         return self.summary["duration"]
 
     @property
     def distance(self):
-        """
-        Returns the overall distance of the route
-        :return: Distance
-        """
+        """Returns the overall distance of the route"""
         return self.summary["distance"]
 
     @property
     def descent(self):
-        """
-        Returns the overall distance of the route
-        :return: Distance
-        """
+        """Returns the overall distance of the route"""
         return self.json_response["properties"]["descent"]
 
     @property
     def ascent(self):
         """
         Returns the overall distance of the route
-        :return: Distance
+        :return: ascent value
         """
         return self.json_response["properties"]["ascent"]
 
@@ -206,7 +186,7 @@ class ORSRoute(object):
         """
         Writes the route to a geojson file
         :param outfile: Path to output file as string
-        :return:
+        :return: geojson file
         """
         self.as_dataframe().to_file(outfile, driver=driver)
 
@@ -221,50 +201,50 @@ class ORSRoute(object):
 
     def to_file(self, outfile):
         """
-        Writes the whole response to file.
-        :param outfile:
-        :return:
+        Writes the whole response to file
+        :param outfile: Object of type Route
+        :return: json file
         """
         with open(outfile, "w") as dst:
             json.dump(self.json_response, dst, indent=4)
 
     def duration_diff_sec(self, other_route):
         """
-        Calculates the duration difference in minutes between this route and another route object and returns the value
+        Calculates the duration difference in minutes between this route and another route object
         :param other route: Object of type Route
-        :return:
+        :return: duration difference value in seconds
         """
         return self.duration - other_route.duration_in_traffic
 
     def duration_diff_perc(self, other_route):
         """
-        Calculates the duration difference in percent between this route and another route object and returns the value
+        Calculates the duration difference in percent between this route and another route object
         :param other route: Object of type Route
-        :return:
+        :return: duration deviation value (difference in percent)
         """
         return (self.duration - other_route.duration_in_traffic) / self.duration * 100
 
     def distance_diff_meter(self, other_route):
         """
-        Calculates the duration difference in meters between this route and another route object and returns the value
+        Calculates the duration difference in meters between this route and another route object
         :param other route: Object of type Route
-        :return:
+        :return: distance difference value in meters
         """
         return self.distance - other_route.distance
 
     def distance_diff_perc(self, other_route):
         """
-        Calculates the duration difference in percent between this route and another route object and returns the value
+        Calculates the duration difference in percent between this route and another route object
         :param other route: Object of type Route
-        :return:
+        :return: distance deviation value (difference in percent)
         """
         return (self.distance - other_route.distance) / self.distance * 100
 
     def geometry_diff_perc(self, other_route):
         """
-        Calculates the geometry deviation in percent of this route and another route object and returns the value
+        Calculates the geometry deviation in percent of this route and another route object
         :param other route: Object of type Route
-        :return:
+        :return: geometry deviation (difference in percent)
         """
         same = self.geometry.intersection(other_route.geometry.buffer(0.0001))
         return (self.geometry.length - same.length) / self.geometry.length * 100
@@ -273,13 +253,13 @@ class ORSRoute(object):
         """
         Calculates the hausdorff distance between this route and another route object and returns the value
         :param other route: Object of type Route
-        :return:
+        :return: hausdorff distance value
         """
         return self.geometry.hausdorff_distance(other_route.geometry)
 
 
 class GoogleRoute(object):
-    """Route calculated using openrouteservice"""
+    """Route calculated using Google Directions API"""
 
     __dataframe = None
     extras = False
@@ -295,18 +275,12 @@ class GoogleRoute(object):
 
     @property
     def json_response(self):
-        """
-        Returns the ORS response as a dictionary
-        :return: dict
-        """
+        """Returns the ORS response as a dictionary"""
         return self.__json_response
 
     @property
     def id(self):
-        """
-        Returns the id of the route
-        :return: id
-        """
+        """Returns the id of the route"""
         return self.json_response["id"]
 
     @property
@@ -319,50 +293,32 @@ class GoogleRoute(object):
 
     @property
     def geometry(self):
-        """
-        Returns the geometry of the route
-        :return:
-        """
+        """Returns the geometry of the route"""
         return LineString(self.coordinates)
 
     @property
     def duration(self):
-        """
-        Returns the overall duration of the route
-        :return: Duration
-        """
+        """Returns the overall duration of the route"""
         return self.json_response["duration"]
 
     @property
     def duration_in_traffic(self):
-        """
-        Returns the overall duration of the route
-        :return: Duration
-        """
+        """Returns the overall duration of the route with traffic"""
         return self.json_response["duration_in_traffic"]
 
     @property
     def distance(self):
-        """
-        Returns the overall distance of the route
-        :return: Distance
-        """
+        """Returns the overall distance of the route"""
         return self.json_response["distance"]
 
     @property
     def departure(self):
-        """
-        Returns the overall duration of the route
-        :return: Duration
-        """
+        """Returns the departure time of the route"""
         return self.json_response["departure_time"]
 
     @property
     def hour(self):
-        """
-        Returns the overall duration of the route
-        :return: Duration
-        """
+        """Returns the hour of the departure time"""
         return self.json_response["hour"]
 
     @property
@@ -419,9 +375,9 @@ class GoogleRoute(object):
 
     def to_file(self, outfile):
         """
-        Writes the whole response to file.
-        :param outfile:
-        :return:
+        Writes the whole response to file
+        :param outfile: path to outfile
+        :return: json file
         """
         with open(outfile, "w") as dst:
             json.dump(self.json_response, dst, indent=4)

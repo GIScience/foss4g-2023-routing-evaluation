@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# Generate random Google Routes
+"""Generate random Google Routes"""
 
 import argparse
 import requests
@@ -10,6 +10,7 @@ from shapely.geometry import LineString
 import os
 import sys
 import random
+import logging
 from tqdm import tqdm
 import dotenv
 from pathlib import Path
@@ -18,7 +19,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.resolve()))
 dotenv.load_dotenv("../.env")
 
-from route_analyst import routingpy, utils, GoogleRoute
+from route_analyst import routingpy, utils
+from route_analyst.routes import GoogleRoute
 from route_analyst.routingpy.exceptions import (
     RouterApiError,
     RouterServerError,
@@ -66,10 +68,12 @@ STATUS_CODES = {
     },
 }
 
+logger = logging.getLogger(__file__)
+logging.basicConfig(level=logging.WARNING)
+
 
 def _parse_direction_json(response, alternatives):
     """
-
     :param response:
     :param alternatives:
     :return:
@@ -163,12 +167,6 @@ def query_google_route(google_client, start_end_coordinates, departure_time):
     :param departure_time:
     :return:
     """
-    # route_google = google_client.directions(locations=start_end_coordinates,
-    #                                        alternatives=True,
-    #                                        profile="driving",
-    #                                        departure_time=departure_time,
-    #                                        traffic_model="best_guess")
-
     start = f"{start_end_coordinates[0][1]},{start_end_coordinates[0][0]}"
     end = f"{start_end_coordinates[1][1]},{start_end_coordinates[1][0]}"
     alternatives = True
@@ -188,7 +186,7 @@ def query_google_route(google_client, start_end_coordinates, departure_time):
         response = requests.request("GET", url, headers=headers, data=payload)
         route_google = _parse_direction_json(response.json(), alternatives)
     except Exception as e:
-        print(e)
+        logger.exception(e)
         return None
 
     if route_google is None:
@@ -241,7 +239,7 @@ def generate_google_routes(aoi_file, n_routes, outfile):
                         departure_time.strftime("%s"),
                     )
                 except Exception as e:
-                    print(e)
+                    logger.exception(e)
                     continue
                 if routes is None:
                     continue

@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Utility functions"""
+
 import random
 from shapely.geometry import Point
 
