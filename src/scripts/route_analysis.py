@@ -116,8 +116,8 @@ def extract_info(data_dir, out_dir, city):
     logger.info("Generating merged Geodataframe...")
     gdf_full = gpd.GeoDataFrame(routes_list_full)
     gdf_full.set_geometry(col="geometry", inplace=True)
-    gdf_full.to_file(out_dir / f"{city}_results_full.geojson")
-    gdf_full.to_csv(out_dir / f"{city}_results_full.csv")
+    gdf_full.to_file(out_dir / f"{city}_all_routes_statistics.geojson")
+    gdf_full.to_csv(out_dir / f"{city}_all_routes_statistics.csv")
 
     return len(routes_list_full)  # for testing
 
