@@ -1,22 +1,27 @@
-import openrouteservice as ors
-import requests
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""ORS routing client"""
 
-from route_analyst import ORSDirectionsResponse
+import openrouteservice as ors
+
+from .responses import ORSDirectionsResponse
 
 
 class ORSRoutingClient:
+    """Create ORS routing client to send requests to ORS server"""
+
     def __init__(self, base_url: str = None, api_key: str = None):
         """
         Initializes parameters and sends request to ORS server
-        :param params: dict
-        :param base_url: string
+        :param base_url: server address of ORS routing server
+        :param api_key: ORS API key
         """
         self.base_url = base_url  # if base_url else
         self.api_key = api_key
         self.__headers = {
             "headers": {
                 "Accept": "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8",
-                "Authorization": "{}".format(api_key),
+                "Authorization": f"{api_key}",
                 "Content-Type": "application/json; charset=utf-8",
             }
         }
@@ -29,14 +34,14 @@ class ORSRoutingClient:
         """
         Send route request to ORS server
 
+        :param params: dict containing request parameters
         :param profile: Name of routing profile
         :param format: Output format
-        :param params: dict containing request parameters
         :return: dict of ORS response
         """
         try:
             response = self.client.request(
-                url="/v2/directions/{}/{}".format(profile, format),
+                url=f"/v2/directions/{profile}/{format}",
                 post_json=params,
                 requests_kwargs=self.__headers,
                 get_params=[],
@@ -44,50 +49,3 @@ class ORSRoutingClient:
             return ORSDirectionsResponse(response)
         except ors.exceptions.ApiError as e:
             raise ValueError(e.message)
-
-
-class GoogleRoutingClient:
-    def __init__(self, api_key: str = None):
-        """
-        Initializes parameters and sends request to ORS server
-        :param params: dict
-        :param base_url: string
-        """
-        self.api_key = api_key
-        self.__headers = headers = {
-            "headers": {
-                "Accept": "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8",
-                "Content-Type": "application/json; charset=utf-8",
-            }
-        }
-
-    def request(self, params: dict):
-        """
-        Send route request to ORS server
-
-        :param profile: Name of routing profile
-        :param format: Output format
-        :param params: dict containing request parameters
-        :return: dict of ORS response
-        """
-        try:
-            url = (
-                f"https://maps.googleapis.com/maps/api/directions/json?"
-                f"origin={params['start']}&"
-                f"destination={params['end']}&"
-                f"&key={self.api_key}&"
-                f"departure_time={params['departure_time']}&"
-                f"alternatives=false&"
-                f"traffic_model=best_guess"
-            )
-            payload = {}
-            headers = {}
-
-            return requests.request("GET", url, headers=headers, data=payload)
-        except Exception as e:
-            print.info(e)
-            return None
-
-    def parse_respons(self):
-        pass
-        # route_google = _parse_direction_json(response.json, alternatives)
