@@ -210,7 +210,7 @@ class ORSRoute(object):
 
     def duration_diff_sec(self, other_route):
         """
-        Calculates the duration difference in minutes between this route and another route object
+        Calculates the duration difference in seconds between this route and another route object
         :param other route: Object of type Route
         :return: duration difference value in seconds
         """
@@ -226,7 +226,7 @@ class ORSRoute(object):
 
     def distance_diff_meter(self, other_route):
         """
-        Calculates the duration difference in meters between this route and another route object
+        Calculates the distance difference in meters between this route and another route object
         :param other route: Object of type Route
         :return: distance difference value in meters
         """
@@ -234,7 +234,7 @@ class ORSRoute(object):
 
     def distance_diff_perc(self, other_route):
         """
-        Calculates the duration difference in percent between this route and another route object
+        Calculates the distance difference in percent between this route and another route object
         :param other route: Object of type Route
         :return: distance deviation value (difference in percent)
         """
